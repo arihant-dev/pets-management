@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, UseFilters } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, UseFilters, UseInterceptors } from '@nestjs/common';
 import { PetsService } from './pets.service';
 import { CreatePetDto } from './dto/create-pet.dto';
 import { UpdatePetDto } from './dto/update-pet.dto';
@@ -6,8 +6,10 @@ import { StaffGuardGuard } from 'src/common/guards/staff-guard.guard';
 import { AgeValidationPipe } from 'src/common/pipes/age-validation.pipe';
 import { SpeciesTransformPipe } from 'src/common/pipes/species-transform.pipe';
 import { PetNotFoundFilter } from 'src/common/filters/pet-not-found.filter';
+import { TimingInterceptor } from 'src/common/interceptors/timing.interceptor';
 
 @Controller('pets')
+@UseInterceptors(TimingInterceptor)
 export class PetsController {
   constructor(private readonly petsService: PetsService) {}
 

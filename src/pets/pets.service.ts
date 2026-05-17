@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePetDto } from './dto/create-pet.dto';
 import { UpdatePetDto } from './dto/update-pet.dto';
 import { DataSource, Repository } from 'typeorm';
@@ -11,23 +11,37 @@ export class PetsService {
     private dataSource: DataSource, 
     @InjectRepository(Pet) private petRepository: Repository<Pet>
   ){}
-  create(createPetDto: CreatePetDto) {
-    return this.petRepository.create(createPetDto);
+  async create(createPetDto: CreatePetDto) {
+    const petEntity = this.petRepository.create(createPetDto);
+    const pet = await this.petRepository.save(petEntity);
+    return pet;
   }
 
-  findAll() {
-    return this.petRepository.find;
+  async findAll() {
+    return await this.petRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} pet`;
+  async findOne(id: number) {
+    const pet = await this.petRepository.findOneBy({id});
+    if (!pet) {
+      throw new NotFoundException(`The pet with ${id} not found`)
+    }
+    return pet;
   }
 
-  update(id: number, updatePetDto: UpdatePetDto) {
-    return `This action updates a #${id} pet`;
+  async update(id: number, updatePetDto: UpdatePetDto) {
+    const pet = await this.petRepository.findOneBy({id});
+    if (!pet) {
+      throw new NotFoundException(`The pet with ${id} not found`)
+    }
+    return this.petRepository.save({id, ...updatePetDto});
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} pet`;
+  async remove(id: number) {
+    const pet = await this.petRepository.findOneBy({id});
+    if (!pet) {
+      throw new NotFoundException(`The pet with ${id} not found`)
+    }
+    return this.petRepository.remove(pet)
   }
 }
