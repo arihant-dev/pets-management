@@ -3,7 +3,7 @@ import { ArgumentMetadata, BadRequestException, Injectable, PipeTransform } from
 @Injectable()
 export class SpeciesTransformPipe implements PipeTransform {
   transform(value: string, metadata: ArgumentMetadata) {
-    value.toLocaleLowerCase;
+    value = value.toLowerCase();
     if (value in ["dogs", "cats", "bird"]) {
       return value;
     } else {

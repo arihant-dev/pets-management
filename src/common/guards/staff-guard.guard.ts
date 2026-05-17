@@ -10,7 +10,7 @@ export class StaffGuardGuard implements CanActivate {
     const request: Request = context.switchToHttp().getRequest();
     
     const isStaff = request.header('x-staff');
-    if (isStaff === 'true') {
+    if (isStaff?.toLowerCase() === 'true') {
       return true;
     }
     return false;

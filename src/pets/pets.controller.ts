@@ -22,7 +22,6 @@ export class PetsController {
 
   @Get()
   findAll(@Query('age') age: number, @Query('name') name: string, @Query('species') species: string) {
-    
     return this.petsService.findAll();
   }
 
